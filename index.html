@@ -70,10 +70,11 @@
     }
 
     header {
-      min-height: 88vh;
+      min-height: 100vh;
+      height: 100vh;
       display: grid;
       place-items: center;
-      padding: 70px 0 40px;
+      padding: 22px 0 28px;
     }
 
     .hero {
@@ -106,8 +107,8 @@
     }
 
     h1 {
-      margin-top: 28px;
-      font-size: clamp(62px, 13vw, 156px);
+      margin-top: 18px;
+      font-size: clamp(56px, 10.5vw, 132px);
       line-height: .84;
       letter-spacing: -.075em;
       font-weight: 800;
@@ -119,7 +120,7 @@
     }
 
     .subtitle {
-      margin: 25px auto 0;
+      margin: 17px auto 0;
       max-width: 620px;
       color: var(--muted);
       font-size: clamp(14px, 2vw, 17px);
@@ -128,7 +129,7 @@
     }
 
     .countdown {
-      margin: 52px auto 0;
+      margin: 28px auto 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 13px;
@@ -138,7 +139,7 @@
 
     .unit {
       position: relative;
-      min-height: 190px;
+      min-height: 160px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -186,7 +187,7 @@
     }
 
     .exact {
-      margin: 20px auto 0;
+      margin: 13px auto 0;
       color: #c2c7d5;
       font-family: "DM Mono", monospace;
       font-size: 13px;
@@ -195,7 +196,7 @@
     }
 
     .target {
-      margin: 34px auto 0;
+      margin: 18px auto 0;
       width: fit-content;
       max-width: 100%;
       padding: 11px 16px;
@@ -268,10 +269,10 @@
 
     @media (max-width: 650px) {
       .wrap { width: min(100% - 24px, 1120px); }
-      header { min-height: auto; padding: 55px 0 35px; }
+      header { min-height: 100svh; height: auto; padding: 28px 0 30px; }
       .countdown { grid-template-columns: 1fr; max-width: 440px; }
       .unit { min-height: 145px; }
-      h1 { font-size: clamp(62px, 22vw, 110px); }
+      h1 { font-size: clamp(58px, 20vw, 100px); }
       .quote { padding: 27px 20px; }
     }
 
