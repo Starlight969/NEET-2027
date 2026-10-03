@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0d14" />
+  <meta name="description" content="A focused NEET 2027 countdown." />
+  <title>NEET 2027 • The Countdown</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #080a10;
+      --panel: rgba(17, 20, 31, 0.72);
+      --panel-solid: #11141f;
+      --text: #f5f7fb;
+      --muted: #9299ab;
+      --line: rgba(255,255,255,.09);
+      --accent: #8b7cff;
+      --accent-2: #5eead4;
+      --glow: rgba(139,124,255,.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(139,124,255,.14), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(94,234,212,.08), transparent 26%),
+        var(--bg);
+      font-family: "Manrope", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      z-index: 10;
+    }
+
+    .orb {
+      position: fixed;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .12;
+      pointer-events: none;
+    }
+
+    .orb.one { background: #7c6cff; top: -180px; left: -120px; }
+    .orb.two { background: #4dd7c4; bottom: -220px; right: -130px; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      min-height: 88vh;
+      display: grid;
+      place-items: center;
+      padding: 70px 0 40px;
+    }
+
+    .hero {
+      width: 100%;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.035);
+      color: #b9bfd0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      animation: rise .7s ease both;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-2);
+      border-radius: 50%;
+      box-shadow: 0 0 18px var(--accent-2);
+    }
+
+    h1 {
+      margin-top: 28px;
+      font-size: clamp(62px, 13vw, 156px);
+      line-height: .84;
+      letter-spacing: -.075em;
+      font-weight: 800;
+      background: linear-gradient(120deg, #fff 8%, #c9c3ff 48%, #83eadb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rise .8s .08s ease both;
+    }
+
+    .subtitle {
+      margin: 25px auto 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(14px, 2vw, 17px);
+      line-height: 1.7;
+      animation: rise .8s .16s ease both;
+    }
+
+    .countdown {
+      margin: 52px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+      max-width: 900px;
+      animation: rise .8s .24s ease both;
+    }
+
+    .unit {
+      position: relative;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 25px;
+      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 70px rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+
+    .unit::after {
+      content: "";
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: var(--glow);
+      filter: blur(60px);
+      opacity: .35;
+      top: -80px;
+      right: -60px;
+    }
+
+    .number {
+      font-family: "DM Mono", monospace;
+      font-size: clamp(48px, 8vw, 76px);
+      line-height: 1;
+      letter-spacing: -.08em;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    .label {
+      margin-top: 13px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .exact {
+      margin: 20px auto 0;
+      color: #c2c7d5;
+      font-family: "DM Mono", monospace;
+      font-size: 13px;
+      letter-spacing: .05em;
+      animation: rise .8s .3s ease both;
+    }
+
+    .target {
+      margin: 34px auto 0;
+      width: fit-content;
+      max-width: 100%;
+      padding: 11px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: #aeb4c5;
+      background: rgba(255,255,255,.025);
+      font-size: 12px;
+    }
+
+    .target strong { color: #fff; }
+
+    main {
+      padding: 20px 0 90px;
+    }
+
+    .section-title {
+      color: #777f93;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .quote {
+      border: 1px solid var(--line);
+      border-radius: 25px;
+      padding: 34px;
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      text-align: center;
+    }
+
+    .quote p {
+      font-size: clamp(19px, 3vw, 28px);
+      font-weight: 700;
+      letter-spacing: -.035em;
+      line-height: 1.35;
+    }
+
+    .quote span {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 25px 0 35px;
+      color: #656c7d;
+      font-size: 11px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .pulse { animation: pulse .5s ease; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.045); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 650px) {
+      .wrap { width: min(100% - 24px, 1120px); }
+      header { min-height: auto; padding: 55px 0 35px; }
+      .countdown { grid-template-columns: 1fr; max-width: 440px; }
+      .unit { min-height: 145px; }
+      h1 { font-size: clamp(62px, 22vw, 110px); }
+      .quote { padding: 27px 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <div class="wrap">
+    <header>
+      <section class="hero" aria-label="NEET 2027 countdown">
+        <div class="eyebrow"><span class="dot"></span> Countdown is live</div>
+
+        <h1>NEET<br>2027</h1>
+
+        <p class="subtitle">
+          One exam. One target. A little less time every second.
+        </p>
+
+        <div class="countdown">
+          <article class="unit">
+            <div class="number" id="months">--</div>
+            <div class="label">Months</div>
+          </article>
+
+          <article class="unit">
+            <div class="number" id="weeks">--</div>
+            <div class="label">Weeks</div>
+          </article>
+
+          <article class="unit">
+            <div class="number" id="days">--</div>
+            <div class="label">Days</div>
+          </article>
+        </div>
+
+        <div class="exact" id="exact">calculating...</div>
+
+        <div class="target">
+          Target: <strong id="targetDate">02 May 2027</strong>
+          <span id="estimateNote"> · provisional countdown date</span>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <div class="section-title">For the days that matter</div>
+      <section class="quote">
+        <p id="quote">“Small progress is still progress. Keep showing up.”</p>
+        <span id="quoteSource">NEET 2027 • Day by day</span>
+      </section>
+    </main>
+
+    <footer>
+      NEET 2027 Countdown · Built for focus, not distraction.<br>
+      The countdown target is configurable because the official NEET 2027 date has not yet been published by NTA.
+    </footer>
+  </div>
+
+  <script>
+    /*
+      NEET 2027 target
+      -----------------
+      NTA has not published the official NEET (UG) 2027 examination date yet.
+      Change this one line when the official date is announced.
+    */
+    const EXAM_DATE = new Date("2027-05-02T09:00:00+05:30");
+
+    const monthsEl = document.getElementById("months");
+    const weeksEl = document.getElementById("weeks");
+    const daysEl = document.getElementById("days");
+    const exactEl = document.getElementById("exact");
+
+    const quotes = [
+      "Small progress is still progress. Keep showing up.",
+      "The syllabus gets smaller every time you study.",
+      "You don't need a perfect day. You need another day.",
+      "Consistency beats the dramatic two-day comeback.",
+      "Future you is built in ordinary study sessions."
+    ];
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const distance = EXAM_DATE.getTime() - now.getTime();
+
+      if (distance <= 0) {
+        monthsEl.textContent = "00";
+        weeksEl.textContent = "00";
+        daysEl.textContent = "00";
+        exactEl.textContent = "NEET 2027 time.";
+        return;
+      }
+
+      const totalSeconds = Math.floor(distance / 1000);
+      const totalDays = Math.floor(totalSeconds / 86400);
+
+      // Calendar-aware month difference for a useful "months remaining" figure.
+      let months = (EXAM_DATE.getFullYear() - now.getFullYear()) * 12
+                 + (EXAM_DATE.getMonth() - now.getMonth());
+
+      const monthAnchor = new Date(now);
+      monthAnchor.setMonth(monthAnchor.getMonth() + months);
+
+      if (monthAnchor > EXAM_DATE) {
+        months--;
+        monthAnchor.setMonth(monthAnchor.getMonth() - 1);
+      }
+
+      const weeks = Math.floor(totalDays / 7);
+
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      monthsEl.textContent = String(Math.max(0, months)).padStart(2, "0");
+      weeksEl.textContent = String(weeks).padStart(2, "0");
+      daysEl.textContent = String(totalDays).padStart(3, "0");
+
+      exactEl.textContent =
+        totalDays + " days  ·  " + pad(hours) + "h " + pad(minutes) + "m " + pad(seconds) + "s";
+    }
+
+    function rotateQuote() {
+      const index = Math.floor(Date.now() / 10000) % quotes.length;
+      document.getElementById("quote").textContent = "“" + quotes[index] + "”";
+    }
+
+    document.getElementById("targetDate").textContent =
+      EXAM_DATE.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+
+    updateCountdown();
+    rotateQuote();
+
+    setInterval(updateCountdown, 1000);
+    setInterval(rotateQuote, 10000);
+  </script>
+</body>
+</html>
