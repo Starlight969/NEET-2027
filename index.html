@@ -131,7 +131,7 @@
     .countdown {
       margin: 28px auto 0;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 13px;
       max-width: 900px;
       animation: rise .8s .24s ease both;
@@ -304,11 +304,11 @@
           </article>
 
           <article class="unit">
-            <div class="number" id="weeks">--</div>
-            <div class="label">Weeks</div>
+            <div class="number" id="extraDays">--</div>
+            <div class="label">Extra Days</div>
           </article>
 
-          <article class="unit">
+          <article class="unit" style="display:none;">
             <div class="number" id="days">--</div>
             <div class="label">Days</div>
           </article>
@@ -346,7 +346,7 @@
     const EXAM_DATE = new Date("2027-05-02T09:00:00+05:30");
 
     const monthsEl = document.getElementById("months");
-    const weeksEl = document.getElementById("weeks");
+    const extraDaysEl = document.getElementById("extraDays");
     const daysEl = document.getElementById("days");
     const exactEl = document.getElementById("exact");
 
@@ -368,7 +368,7 @@
 
       if (distance <= 0) {
         monthsEl.textContent = "00";
-        weeksEl.textContent = "00";
+        extraDaysEl.textContent = "00";
         daysEl.textContent = "00";
         exactEl.textContent = "NEET 2027 time.";
         return;
@@ -389,14 +389,17 @@
         monthAnchor.setMonth(monthAnchor.getMonth() - 1);
       }
 
-      const weeks = Math.floor(totalDays / 7);
+      const completedMonths = months;
+      const monthStart = new Date(now);
+      monthStart.setMonth(monthStart.getMonth() + completedMonths);
+      const extraDays = Math.floor((EXAM_DATE.getTime() - monthStart.getTime()) / 86400000);
 
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
       monthsEl.textContent = String(Math.max(0, months)).padStart(2, "0");
-      weeksEl.textContent = String(weeks).padStart(2, "0");
+      extraDaysEl.textContent = String(Math.max(0, extraDays)).padStart(2, "0");
       daysEl.textContent = String(totalDays).padStart(3, "0");
 
       exactEl.textContent =
