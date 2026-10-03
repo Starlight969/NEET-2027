@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b0d14" />
+  <meta name="theme-color" content="#020204" />
   <meta name="description" content="A focused NEET 2027 countdown." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.svg" />
   <title>NEET 2027 • The Countdown</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,15 +15,16 @@
 
   <style>
     :root {
-      --bg: #080a10;
-      --panel: rgba(17, 20, 31, 0.72);
-      --panel-solid: #11141f;
-      --text: #f5f7fb;
-      --muted: #9299ab;
-      --line: rgba(255,255,255,.09);
+      --bg: #020204;
+      --bg-soft: #07070b;
+      --panel: rgba(12, 12, 18, .72);
+      --text: #f7f7fb;
+      --muted: #858596;
+      --line: rgba(255,255,255,.085);
       --accent: #8b7cff;
-      --accent-2: #5eead4;
-      --glow: rgba(139,124,255,.28);
+      --accent-2: #54e7d0;
+      --pink: #c98cff;
+      --glow: rgba(139,124,255,.32);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,47 +34,101 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 15% 15%, rgba(139,124,255,.14), transparent 28%),
-        radial-gradient(circle at 85% 80%, rgba(94,234,212,.08), transparent 26%),
-        var(--bg);
+      background: var(--bg);
       font-family: "Manrope", system-ui, sans-serif;
       overflow-x: hidden;
     }
 
+    /* Animated atmosphere */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: .035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-      z-index: 10;
+      z-index: 20;
+      opacity: .045;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
     }
 
-    .orb {
+    body::after {
+      content: "";
       position: fixed;
-      width: 380px;
-      height: 380px;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: .12;
+      inset: 0;
       pointer-events: none;
+      z-index: 19;
+      opacity: .16;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+      animation: gridDrift 18s linear infinite;
     }
 
-    .orb.one { background: #7c6cff; top: -180px; left: -120px; }
-    .orb.two { background: #4dd7c4; bottom: -220px; right: -130px; }
+    .aurora {
+      position: fixed;
+      width: 560px;
+      height: 560px;
+      border-radius: 50%;
+      filter: blur(110px);
+      pointer-events: none;
+      opacity: .12;
+      z-index: 0;
+    }
+
+    .aurora.one {
+      top: -330px;
+      left: -220px;
+      background: #6e5dff;
+      animation: floatOne 12s ease-in-out infinite alternate;
+    }
+
+    .aurora.two {
+      right: -300px;
+      bottom: -350px;
+      background: #22d9c0;
+      animation: floatTwo 15s ease-in-out infinite alternate;
+    }
+
+    .aurora.three {
+      top: 35%;
+      left: 50%;
+      width: 280px;
+      height: 280px;
+      background: #a45cff;
+      opacity: .055;
+      animation: breathe 7s ease-in-out infinite;
+    }
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.7);
+      box-shadow: 0 0 8px rgba(255,255,255,.45);
+      animation: particleFloat linear infinite;
+    }
 
     .wrap {
       width: min(1120px, calc(100% - 36px));
       margin: 0 auto;
       position: relative;
-      z-index: 1;
+      z-index: 3;
     }
 
     header {
       min-height: 100vh;
-      height: 100vh;
+      min-height: 100svh;
       display: grid;
       place-items: center;
       padding: 22px 0 28px;
@@ -89,12 +146,14 @@
       padding: 8px 13px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,.035);
-      color: #b9bfd0;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .16em;
+      background: rgba(255,255,255,.028);
+      color: #b9b9c8;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .19em;
       text-transform: uppercase;
+      box-shadow: 0 0 30px rgba(139,124,255,.05);
+      backdrop-filter: blur(12px);
       animation: rise .7s ease both;
     }
 
@@ -103,188 +162,294 @@
       height: 7px;
       background: var(--accent-2);
       border-radius: 50%;
-      box-shadow: 0 0 18px var(--accent-2);
+      box-shadow: 0 0 8px var(--accent-2), 0 0 20px var(--accent-2);
+      animation: livePulse 1.7s ease-in-out infinite;
     }
 
     h1 {
-      margin-top: 18px;
-      font-size: clamp(56px, 10.5vw, 132px);
-      line-height: .84;
-      letter-spacing: -.075em;
+      margin-top: 17px;
+      font-size: clamp(57px, 10.5vw, 132px);
+      line-height: .83;
+      letter-spacing: -.085em;
       font-weight: 800;
-      background: linear-gradient(120deg, #fff 8%, #c9c3ff 48%, #83eadb 100%);
+      background: linear-gradient(115deg, #ffffff 5%, #ddd9ff 42%, #8ff4e4 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: rise .8s .08s ease both;
+      filter: drop-shadow(0 0 35px rgba(139,124,255,.12));
+      animation: titleIn .95s .05s cubic-bezier(.2,.8,.2,1) both;
     }
 
     .subtitle {
       margin: 17px auto 0;
       max-width: 620px;
       color: var(--muted);
-      font-size: clamp(14px, 2vw, 17px);
+      font-size: clamp(13px, 2vw, 16px);
       line-height: 1.7;
-      animation: rise .8s .16s ease both;
+      animation: rise .8s .18s ease both;
     }
 
     .countdown {
-      margin: 28px auto 0;
+      margin: 27px auto 0;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 13px;
       max-width: 900px;
-      animation: rise .8s .24s ease both;
+      animation: rise .8s .25s ease both;
     }
 
     .unit {
       position: relative;
-      min-height: 160px;
+      min-height: 164px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,.085);
       border-radius: 25px;
-      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
-      backdrop-filter: blur(18px);
-      box-shadow: 0 24px 70px rgba(0,0,0,.18);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.012)),
+        rgba(7,7,11,.72);
+      backdrop-filter: blur(20px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.055),
+        0 25px 80px rgba(0,0,0,.48),
+        0 0 0 1px rgba(139,124,255,.015);
       overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform .45s cubic-bezier(.2,.8,.2,1), border-color .45s, box-shadow .45s;
+    }
+
+    .unit::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(139,124,255,.4) 75deg, transparent 130deg, rgba(84,231,208,.22) 220deg, transparent 275deg);
+      opacity: 0;
+      filter: blur(12px);
+      transition: opacity .45s;
+      animation: spin 7s linear infinite;
     }
 
     .unit::after {
       content: "";
       position: absolute;
-      width: 140px;
-      height: 140px;
+      width: 170px;
+      height: 170px;
       border-radius: 50%;
       background: var(--glow);
-      filter: blur(60px);
-      opacity: .35;
-      top: -80px;
-      right: -60px;
+      filter: blur(70px);
+      opacity: .22;
+      top: -100px;
+      right: -70px;
+      transition: opacity .45s, transform .45s;
     }
+
+    .unit:hover {
+      transform: translateY(-7px) scale(1.012);
+      border-color: rgba(139,124,255,.3);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07),
+        0 30px 90px rgba(0,0,0,.58),
+        0 0 45px rgba(139,124,255,.09);
+    }
+
+    .unit:hover::before { opacity: 1; }
+    .unit:hover::after { opacity: .42; transform: scale(1.2); }
+
+    .unit > * { position: relative; z-index: 2; }
 
     .number {
       font-family: "DM Mono", monospace;
-      font-size: clamp(48px, 8vw, 76px);
+      font-size: clamp(48px, 8vw, 78px);
       line-height: 1;
       letter-spacing: -.08em;
       font-weight: 500;
-      position: relative;
-      z-index: 1;
+      text-shadow: 0 0 28px rgba(139,124,255,.13);
     }
+
+    .number.tick { animation: numberTick .42s cubic-bezier(.2,.8,.2,1); }
 
     .label {
       margin-top: 13px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .2em;
+      color: #777789;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .23em;
       text-transform: uppercase;
-      position: relative;
-      z-index: 1;
     }
 
     .exact {
       margin: 13px auto 0;
-      color: #c2c7d5;
+      color: #9b9bab;
       font-family: "DM Mono", monospace;
-      font-size: 13px;
-      letter-spacing: .05em;
+      font-size: 12px;
+      letter-spacing: .045em;
       animation: rise .8s .3s ease both;
     }
 
     .target {
-      margin: 18px auto 0;
+      margin: 17px auto 0;
       width: fit-content;
       max-width: 100%;
-      padding: 11px 16px;
+      padding: 10px 15px;
       border: 1px solid var(--line);
       border-radius: 12px;
-      color: #aeb4c5;
-      background: rgba(255,255,255,.025);
-      font-size: 12px;
+      color: #777788;
+      background: rgba(255,255,255,.018);
+      font-size: 11px;
+      backdrop-filter: blur(10px);
+      animation: rise .8s .35s ease both;
     }
 
-    .target strong { color: #fff; }
+    .target strong { color: #d7d7e1; }
 
-    main {
-      padding: 20px 0 90px;
-    }
+    main { padding: 20px 0 90px; }
 
     .section-title {
-      color: #777f93;
-      font-size: 11px;
+      color: #626272;
+      font-size: 10px;
       font-weight: 800;
-      letter-spacing: .2em;
+      letter-spacing: .22em;
       text-transform: uppercase;
       margin-bottom: 14px;
     }
 
     .quote {
+      position: relative;
       border: 1px solid var(--line);
       border-radius: 25px;
       padding: 34px;
       background: var(--panel);
-      backdrop-filter: blur(18px);
+      backdrop-filter: blur(20px);
       text-align: center;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,.3);
+    }
+
+    .quote::before {
+      content: "";
+      position: absolute;
+      left: -20%;
+      top: 0;
+      width: 35%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #9d91ff, transparent);
+      box-shadow: 0 0 20px #8b7cff;
+      animation: scan 5s ease-in-out infinite;
     }
 
     .quote p {
-      font-size: clamp(19px, 3vw, 28px);
+      font-size: clamp(18px, 3vw, 27px);
       font-weight: 700;
       letter-spacing: -.035em;
       line-height: 1.35;
+      transition: opacity .35s, transform .35s;
+    }
+
+    .quote p.changing {
+      opacity: 0;
+      transform: translateY(7px);
     }
 
     .quote span {
       display: block;
       margin-top: 12px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
     }
 
     footer {
       border-top: 1px solid var(--line);
       padding: 25px 0 35px;
-      color: #656c7d;
-      font-size: 11px;
+      color: #4e4e5c;
+      font-size: 10px;
       line-height: 1.7;
       text-align: center;
     }
-
-    .pulse { animation: pulse .5s ease; }
 
     @keyframes rise {
       from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.045); }
-      100% { transform: scale(1); }
+    @keyframes titleIn {
+      from { opacity: 0; transform: translateY(25px) scale(.97); filter: blur(8px) drop-shadow(0 0 35px rgba(139,124,255,.12)); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) drop-shadow(0 0 35px rgba(139,124,255,.12)); }
+    }
+
+    @keyframes livePulse {
+      0%,100% { transform: scale(1); opacity: .75; }
+      50% { transform: scale(1.45); opacity: 1; }
+    }
+
+    @keyframes gridDrift {
+      from { transform: translate(0,0); }
+      to { transform: translate(70px,70px); }
+    }
+
+    @keyframes floatOne {
+      from { transform: translate3d(0,0,0) scale(1); }
+      to { transform: translate3d(90px,70px,0) scale(1.12); }
+    }
+
+    @keyframes floatTwo {
+      from { transform: translate3d(0,0,0) scale(1); }
+      to { transform: translate3d(-100px,-80px,0) scale(1.15); }
+    }
+
+    @keyframes breathe {
+      0%,100% { transform: scale(.8); opacity: .035; }
+      50% { transform: scale(1.35); opacity: .075; }
+    }
+
+    @keyframes particleFloat {
+      from { transform: translate3d(0, 20px, 0); opacity: 0; }
+      12% { opacity: .7; }
+      80% { opacity: .3; }
+      to { transform: translate3d(var(--drift), -110vh, 0); opacity: 0; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes numberTick {
+      0% { transform: translateY(-5px); opacity: .65; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes scan {
+      0%, 15% { left: -20%; }
+      65%, 100% { left: 110%; }
     }
 
     @media (max-width: 650px) {
       .wrap { width: min(100% - 24px, 1120px); }
-      header { min-height: 100svh; height: auto; padding: 28px 0 30px; }
+      header { padding: 25px 0 30px; }
       .countdown { grid-template-columns: 1fr; max-width: 440px; }
-      .unit { min-height: 145px; }
+      .unit { min-height: 143px; }
       h1 { font-size: clamp(58px, 20vw, 100px); }
+      .subtitle { max-width: 350px; }
       .quote { padding: 27px 20px; }
+      body::after { background-size: 50px 50px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="orb one"></div>
-  <div class="orb two"></div>
+  <div class="aurora one"></div>
+  <div class="aurora two"></div>
+  <div class="aurora three"></div>
+  <div id="particles" aria-hidden="true"></div>
 
   <div class="wrap">
     <header>
@@ -305,7 +470,7 @@
 
           <article class="unit">
             <div class="number" id="extraDays">--</div>
-            <div class="label">Days</div>
+            <div class="label">Extra Days</div>
           </article>
 
           <article class="unit" style="display:none;">
@@ -318,7 +483,7 @@
 
         <div class="target">
           Target: <strong id="targetDate">02 May 2027</strong>
-          <span id="estimateNote"> ·Good Luck!!!</span>
+          <span id="estimateNote"> · Good Luck!!!</span>
         </div>
       </section>
     </header>
@@ -327,22 +492,16 @@
       <div class="section-title">For the days that matter</div>
       <section class="quote">
         <p id="quote">“Small progress is still progress. Keep showing up.”</p>
-        <span id="quoteSource">NEET 2027 • Day by day</span>
+        <span>NEET 2027 • Day by day</span>
       </section>
     </main>
 
     <footer>
-      NEET 2027 Countdown · Built for focus, not distraction.<br>
+      NEET 2027 Countdown · Built for focus, not distraction.
     </footer>
   </div>
 
   <script>
-    /*
-      NEET 2027 target
-      -----------------
-      NTA has not published the official NEET (UG) 2027 examination date yet.
-      Change this one line when the official date is announced
-    */
     const EXAM_DATE = new Date("2027-05-02T09:00:00+05:30");
 
     const monthsEl = document.getElementById("months");
@@ -362,14 +521,23 @@
       return String(value).padStart(2, "0");
     }
 
+    function tick(el, value) {
+      const next = String(value);
+      if (el.textContent !== next) {
+        el.textContent = next;
+        el.classList.remove("tick");
+        void el.offsetWidth;
+        el.classList.add("tick");
+      }
+    }
+
     function updateCountdown() {
       const now = new Date();
       const distance = EXAM_DATE.getTime() - now.getTime();
 
       if (distance <= 0) {
-        monthsEl.textContent = "00";
-        extraDaysEl.textContent = "00";
-        daysEl.textContent = "00";
+        tick(monthsEl, "00");
+        tick(extraDaysEl, "00");
         exactEl.textContent = "NEET 2027 time.";
         return;
       }
@@ -377,7 +545,6 @@
       const totalSeconds = Math.floor(distance / 1000);
       const totalDays = Math.floor(totalSeconds / 86400);
 
-      // Calendar-aware month difference for a useful "months remaining" figure.
       let months = (EXAM_DATE.getFullYear() - now.getFullYear()) * 12
                  + (EXAM_DATE.getMonth() - now.getMonth());
 
@@ -389,17 +556,19 @@
         monthAnchor.setMonth(monthAnchor.getMonth() - 1);
       }
 
-      const completedMonths = months;
       const monthStart = new Date(now);
-      monthStart.setMonth(monthStart.getMonth() + completedMonths);
-      const extraDays = Math.floor((EXAM_DATE.getTime() - monthStart.getTime()) / 86400000);
+      monthStart.setMonth(monthStart.getMonth() + months);
+
+      const extraDays = Math.floor(
+        (EXAM_DATE.getTime() - monthStart.getTime()) / 86400000
+      );
 
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      monthsEl.textContent = String(Math.max(0, months)).padStart(2, "0");
-      extraDaysEl.textContent = String(Math.max(0, extraDays)).padStart(2, "0");
+      tick(monthsEl, String(Math.max(0, months)).padStart(2, "0"));
+      tick(extraDaysEl, String(Math.max(0, extraDays)).padStart(2, "0"));
       daysEl.textContent = String(totalDays).padStart(3, "0");
 
       exactEl.textContent =
@@ -407,8 +576,35 @@
     }
 
     function rotateQuote() {
+      const quoteEl = document.getElementById("quote");
       const index = Math.floor(Date.now() / 10000) % quotes.length;
-      document.getElementById("quote").textContent = "“" + quotes[index] + "”";
+
+      quoteEl.classList.add("changing");
+
+      setTimeout(() => {
+        quoteEl.textContent = "“" + quotes[index] + "”";
+        quoteEl.classList.remove("changing");
+      }, 280);
+    }
+
+    function createParticles() {
+      const container = document.getElementById("particles");
+      const count = window.innerWidth < 650 ? 18 : 34;
+
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement("span");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.top = (75 + Math.random() * 35) + "%";
+        particle.style.opacity = (0.2 + Math.random() * 0.55).toFixed(2);
+        particle.style.animationDuration = (12 + Math.random() * 18).toFixed(2) + "s";
+        particle.style.animationDelay = (-Math.random() * 22).toFixed(2) + "s";
+        particle.style.setProperty("--drift", (Math.random() * 140 - 70).toFixed(0) + "px");
+        const size = (Math.random() * 2 + 1).toFixed(1);
+        particle.style.width = size + "px";
+        particle.style.height = size + "px";
+        container.appendChild(particle);
+      }
     }
 
     document.getElementById("targetDate").textContent =
@@ -418,6 +614,7 @@
         year: "numeric"
       });
 
+    createParticles();
     updateCountdown();
     rotateQuote();
 
