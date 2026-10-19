@@ -116,6 +116,39 @@
       will-change: transform;
     }
 
+    .quick-actions {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 30;
+      display: flex;
+      gap: 8px;
+    }
+
+    .quick-actions a, .quick-actions button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 13px;
+      color: #d8d7e5;
+      font: 700 11px "Manrope", sans-serif;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      background: rgba(8,8,13,.88);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+
+    .quick-actions a:hover, .quick-actions button:hover {
+      border-color: rgba(139,124,255,.55);
+      background: #101018;
+    }
+
+    .quick-actions svg { width: 15px; height: 15px; }
+
     .wrap {
       width: min(1120px, calc(100% - 36px));
       margin: 0 auto;
@@ -408,6 +441,10 @@
 
     @media (max-width: 650px) {
       .wrap { width: min(100% - 24px, 1120px); }
+      .quick-actions { top: 9px; right: 9px; gap: 6px; }
+      .quick-actions a, .quick-actions button { min-height: 34px; padding: 0 10px; font-size: 10px; }
+      .quick-actions svg { width: 13px; height: 13px; }
+      header { padding-top: 54px; }
       header { padding: 25px 0 30px; }
       .countdown { grid-template-columns: 1fr; max-width: 440px; }
       .unit { min-height: 143px; }
@@ -487,6 +524,17 @@
   <div class="aurora two"></div>
   <div class="aurora three"></div>
   <div id="particles" aria-hidden="true"></div>
+
+  <nav class="quick-actions" aria-label="Website tools">
+    <a href="notes.html" aria-label="Open Study Hub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
+      Study Hub
+    </a>
+    <button id="fullscreenBtn" type="button" aria-label="Enter fullscreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      <span id="fullscreenLabel">Fullscreen</span>
+    </button>
+  </nav>
 
   <div class="wrap">
     <header>
@@ -646,6 +694,33 @@
         month: "long",
         year: "numeric"
       });
+
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const fullscreenLabel = document.getElementById("fullscreenLabel");
+
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          fullscreenLabel.textContent = "Exit fullscreen";
+          fullscreenBtn.setAttribute("aria-label", "Exit fullscreen");
+        } else {
+          await document.exitFullscreen();
+          fullscreenLabel.textContent = "Fullscreen";
+          fullscreenBtn.setAttribute("aria-label", "Enter fullscreen");
+        }
+      } catch (error) {
+        fullscreenLabel.textContent = "Not supported";
+        setTimeout(() => { fullscreenLabel.textContent = "Fullscreen"; }, 1800);
+      }
+    }
+
+    fullscreenBtn.addEventListener("click", toggleFullscreen);
+    document.addEventListener("fullscreenchange", () => {
+      const active = Boolean(document.fullscreenElement);
+      fullscreenLabel.textContent = active ? "Exit fullscreen" : "Fullscreen";
+      fullscreenBtn.setAttribute("aria-label", active ? "Exit fullscreen" : "Enter fullscreen");
+    });
 
     createParticles();
     updateCountdown();
