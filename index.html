@@ -26,7 +26,10 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scrollbar-width: none; }
+    html::-webkit-scrollbar { display: none; }
+    body { scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
 
     body {
       min-height: 100vh;
@@ -444,7 +447,6 @@
       .quick-actions { top: 9px; right: 9px; gap: 6px; }
       .quick-actions a, .quick-actions button { min-height: 34px; padding: 0 10px; font-size: 10px; }
       .quick-actions svg { width: 13px; height: 13px; }
-      header { padding-top: 54px; }
       header { padding: 25px 0 30px; }
       .countdown { grid-template-columns: 1fr; max-width: 440px; }
       .unit { min-height: 143px; }
@@ -507,6 +509,47 @@
 
     @media (max-width: 650px) and (prefers-reduced-motion: no-preference) {
       #particles .particle:nth-child(n+9) { display: none; }
+    }
+
+    html.is-fullscreen,
+    html.is-fullscreen body {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    body.is-fullscreen {
+      min-height: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body.is-fullscreen .wrap {
+      height: 100%;
+      width: min(1120px, calc(100% - 36px));
+      overflow: hidden;
+    }
+
+    body.is-fullscreen header {
+      min-height: 100%;
+      height: 100%;
+      padding: 56px 0 18px;
+    }
+
+    body.is-fullscreen main,
+    body.is-fullscreen footer {
+      display: none;
+    }
+
+    @media (max-height: 650px) {
+      body.is-fullscreen header { padding-top: 48px; }
+      body.is-fullscreen h1 { font-size: clamp(48px, 10vh, 84px); margin-top: 10px; }
+      body.is-fullscreen .subtitle { margin-top: 10px; }
+      body.is-fullscreen .countdown { margin-top: 16px; }
+      body.is-fullscreen .unit { min-height: 115px; }
+      body.is-fullscreen .number { font-size: clamp(42px, 8vh, 62px); }
+      body.is-fullscreen .target { margin-top: 10px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -698,14 +741,21 @@
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     const fullscreenLabel = document.getElementById("fullscreenLabel");
 
+    function setFullscreenLayout(active) {
+      document.body.classList.toggle("is-fullscreen", active);
+      document.documentElement.classList.toggle("is-fullscreen", active);
+    }
+
     async function toggleFullscreen() {
       try {
         if (!document.fullscreenElement) {
           await document.documentElement.requestFullscreen();
+          setFullscreenLayout(true);
           fullscreenLabel.textContent = "Exit fullscreen";
           fullscreenBtn.setAttribute("aria-label", "Exit fullscreen");
         } else {
           await document.exitFullscreen();
+          setFullscreenLayout(false);
           fullscreenLabel.textContent = "Fullscreen";
           fullscreenBtn.setAttribute("aria-label", "Enter fullscreen");
         }
@@ -718,6 +768,7 @@
     fullscreenBtn.addEventListener("click", toggleFullscreen);
     document.addEventListener("fullscreenchange", () => {
       const active = Boolean(document.fullscreenElement);
+      setFullscreenLayout(active);
       fullscreenLabel.textContent = active ? "Exit fullscreen" : "Fullscreen";
       fullscreenBtn.setAttribute("aria-label", active ? "Exit fullscreen" : "Enter fullscreen");
     });
