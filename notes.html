@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#020204">
+  <meta name="description" content="Your personal NEET 2027 notes and study progress hub.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Study Hub • NEET 2027</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#020204;--panel:#0b0b11;--line:rgba(255,255,255,.09);--text:#f6f6fb;--muted:#89899b;--purple:#9a8cff;--teal:#54e7d0}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:radial-gradient(ellipse at 15% 0%,rgba(110,93,255,.11),transparent 34%),radial-gradient(ellipse at 95% 65%,rgba(34,217,192,.06),transparent 28%),var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .shell{width:min(1080px,calc(100% - 32px));margin:0 auto;padding:28px 0 60px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:36px}
+    .brand{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#c7c3e6}
+    .back{border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:#0b0b11;color:#d7d7e5;font-size:12px;font-weight:700}
+    .eyebrow{color:var(--teal);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:800}
+    h1{font-size:clamp(36px,7vw,66px);line-height:1.05;letter-spacing:-.065em;margin-top:10px}
+    .intro{color:var(--muted);line-height:1.7;margin-top:12px;font-size:14px;max-width:650px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0}
+    .stat,.panel{border:1px solid var(--line);border-radius:18px;background:rgba(11,11,17,.9);box-shadow:0 16px 45px rgba(0,0,0,.18)}
+    .stat{padding:18px}
+    .stat .value{font:500 30px "DM Mono",monospace;letter-spacing:-.06em}
+    .stat .label{color:var(--muted);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-top:7px;font-weight:800}
+    .progress-track{height:5px;background:#20202b;border-radius:99px;overflow:hidden;margin-top:14px}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--teal));border-radius:99px;transition:width .25s}
+    .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;align-items:start}
+    .panel{padding:22px}
+    .panel h2{font-size:17px;letter-spacing:-.03em;margin-bottom:6px}
+    .help{color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:18px}
+    label{display:block;color:#b8b8c8;font-size:11px;font-weight:800;letter-spacing:.08em;margin:14px 0 7px}
+    input,select,textarea{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:#06060a;color:var(--text);padding:12px 13px;font:13px Manrope,system-ui,sans-serif;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:rgba(154,140,255,.7);box-shadow:0 0 0 3px rgba(154,140,255,.08)}
+    textarea{min-height:210px;resize:vertical;line-height:1.65}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    button{border:1px solid rgba(154,140,255,.35);border-radius:11px;background:rgba(154,140,255,.13);color:#e6e2ff;padding:11px 14px;font:800 12px Manrope,sans-serif;cursor:pointer}
+    button:hover{background:rgba(154,140,255,.2)}
+    .primary{margin-top:12px;width:100%}
+    .note-list{display:grid;gap:8px;margin-top:16px}
+    .note-item{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;background:#07070c;padding:12px}
+    .note-item strong{display:block;font-size:12px;overflow-wrap:anywhere}
+    .note-item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+    .note-item button{padding:7px 9px;font-size:10px;flex-shrink:0}
+    .task-add{display:flex;gap:8px}
+    .task-add input{min-width:0}
+    .task-add button{white-space:nowrap}
+    .task-list{display:grid;gap:8px;margin-top:15px}
+    .task{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#07070c}
+    .task input{width:16px;height:16px;margin-top:2px;accent-color:#9a8cff;flex-shrink:0}
+    .task .task-text{flex:1;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+    .task.done .task-text{text-decoration:line-through;color:#777789}
+    .task button{padding:5px 8px;font-size:10px;background:transparent;border-color:var(--line);color:var(--muted)}
+    .empty{padding:18px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:#777789;font-size:12px;line-height:1.6}
+    .notice{color:#6f6f80;font-size:10px;line-height:1.6;margin-top:12px}
+    .subject-dot{display:inline-block;width:6px;height:6px;background:var(--teal);border-radius:50%;margin-right:7px}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat .value{font-size:25px}.panel{padding:17px}.shell{padding-top:18px}}
+    @media(max-width:420px){.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.row{grid-template-columns:1fr}.top{margin-bottom:28px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="top">
+      <a class="brand" href="index.html">✦ NEET / 2027</a>
+      <a class="back" href="index.html">← Countdown</a>
+    </nav>
+    <header>
+      <div class="eyebrow">Your personal workspace</div>
+      <h1>Study Hub<span style="color:var(--purple)">.</span></h1>
+      <p class="intro">Keep your revision notes, turn daily goals into checkboxes, and watch your progress build. Your data stays in this browser on this device.</p>
+    </header>
+
+    <section class="stats" aria-label="Study progress">
+      <article class="stat"><div class="value" id="taskCount">0/0</div><div class="label">Tasks completed</div><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div></article>
+      <article class="stat"><div class="value" id="completion">0%</div><div class="label">Completion rate</div></article>
+      <article class="stat"><div class="value" id="noteCount">0</div><div class="label">Saved notes</div></article>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <h2><span class="subject-dot"></span>Revision notes</h2>
+        <p class="help">Save a concept, formula, mistake, or quick revision summary. Select a saved note to edit it.</p>
+        <form id="noteForm">
+          <input type="hidden" id="noteId">
+          <div class="row">
+            <div><label for="noteTitle">NOTE TITLE</label><input id="noteTitle" maxlength="100" placeholder="e.g. Electrochemistry formulas" required></div>
+            <div><label for="noteSubject">SUBJECT</label><select id="noteSubject"><option>Physics</option><option>Chemistry</option><option>Biology</option><option>General</option></select></div>
+          </div>
+          <label for="noteBody">YOUR NOTES</label>
+          <textarea id="noteBody" maxlength="30000" placeholder="Write your notes here..." required></textarea>
+          <div class="row" style="margin-top:12px">
+            <button type="submit" id="saveNote">Save note</button>
+            <button type="button" id="clearNote" style="background:transparent;border-color:var(--line);color:#aaa">Clear editor</button>
+          </div>
+        </form>
+        <div class="note-list" id="noteList"></div>
+        <p class="notice">Autosaving isn't needed: press Save note to keep your changes. Export important notes for a backup.</p>
+        <button type="button" id="exportNotes" class="primary">Export notes as JSON</button>
+      </section>
+
+      <section class="panel">
+        <h2><span class="subject-dot"></span>Daily progress</h2>
+        <p class="help">Add small, specific tasks. Tick them off as you finish them.</p>
+        <form id="taskForm" class="task-add">
+          <input id="taskInput" maxlength="180" placeholder="e.g. Revise Newton's laws" required>
+          <button type="submit">Add</button>
+        </form>
+        <div class="task-list" id="taskList"></div>
+        <p class="notice">Progress is calculated from the tasks in this list. You can delete tasks and add new ones whenever your plan changes.</p>
+        <button type="button" id="exportTasks" class="primary">Export progress as JSON</button>
+      </section>
+    </div>
+    <p class="notice" style="text-align:center;margin-top:24px">This is a local-first page. Browser data can be cleared by device/browser settings, so export backups if the notes matter.</p>
+  </div>
+
+  <script>
+    const NOTES_KEY = "neet2027.studyhub.notes.v1";
+    const TASKS_KEY = "neet2027.studyhub.tasks.v1";
+    const $ = (id) => document.getElementById(id);
+    const read = (key) => { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; } };
+    let notes = read(NOTES_KEY);
+    let tasks = read(TASKS_KEY);
+
+    function persist() {
+      try {
+        localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+        localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+      } catch (error) {
+        alert("Your browser could not save this data. Try exporting your notes or freeing some browser storage.");
+      }
+      renderNotes();
+      renderTasks();
+      renderStats();
+    }
+
+    function safeText(value) { return String(value).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch])); }
+
+    function renderNotes() {
+      const list = $("noteList");
+      $("noteCount").textContent = notes.length;
+      if (!notes.length) {
+        list.innerHTML = '<div class="empty">No notes saved yet.<br>Your best revision shortcuts belong here.</div>';
+        return;
+      }
+      list.innerHTML = notes.slice().sort((a,b) => b.updated - a.updated).map(note =>
+        '<article class="note-item"><div><strong>' + safeText(note.title) + '</strong><small>' + safeText(note.subject) + ' · ' + new Date(note.updated).toLocaleDateString() + '</small></div><div style="display:flex;gap:6px"><button type="button" data-edit="' + safeText(note.id) + '">Open</button><button type="button" data-delete-note="' + safeText(note.id) + '">Delete</button></div></article>'
+      ).join("");
+    }
+
+    function renderTasks() {
+      const list = $("taskList");
+      if (!tasks.length) {
+        list.innerHTML = '<div class="empty">Your checklist is empty.<br>Add one small task to get started.</div>';
+        return;
+      }
+      list.innerHTML = tasks.map(task =>
+        '<div class="task ' + (task.done ? "done" : "") + '"><input type="checkbox" data-toggle="' + safeText(task.id) + '" ' + (task.done ? "checked" : "") + ' aria-label="Mark task complete"><div class="task-text">' + safeText(task.text) + '</div><button type="button" data-delete-task="' + safeText(task.id) + '" aria-label="Delete task">✕</button></div>'
+      ).join("");
+    }
+
+    function renderStats() {
+      const done = tasks.filter(task => task.done).length;
+      const total = tasks.length;
+      const percent = total ? Math.round(done / total * 100) : 0;
+      $("taskCount").textContent = done + "/" + total;
+      $("completion").textContent = percent + "%";
+      $("progressFill").style.width = percent + "%";
+    }
+
+    function clearEditor() {
+      $("noteForm").reset();
+      $("noteId").value = "";
+      $("saveNote").textContent = "Save note";
+    }
+
+    $("noteForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const title = $("noteTitle").value.trim();
+      const body = $("noteBody").value.trim();
+      if (!title || !body) return;
+      const id = $("noteId").value;
+      const existing = notes.find(note => note.id === id);
+      const note = { id: id || (Date.now().toString(36) + Math.random().toString(36).slice(2,7)), title, subject: $("noteSubject").value, body, updated: Date.now() };
+      if (existing) notes = notes.map(item => item.id === id ? note : item);
+      else notes.push(note);
+      persist();
+      clearEditor();
+    });
+
+    $("clearNote").addEventListener("click", clearEditor);
+
+    $("noteList").addEventListener("click", (event) => {
+      const editId = event.target.dataset.edit;
+      const deleteId = event.target.dataset.deleteNote;
+      if (editId) {
+        const note = notes.find(item => item.id === editId);
+        if (!note) return;
+        $("noteId").value = note.id;
+        $("noteTitle").value = note.title;
+        $("noteSubject").value = note.subject;
+        $("noteBody").value = note.body;
+        $("saveNote").textContent = "Update note";
+        $("noteTitle").focus();
+      }
+      if (deleteId && confirm("Delete this note?")) {
+        notes = notes.filter(item => item.id !== deleteId);
+        if ($("noteId").value === deleteId) clearEditor();
+        persist();
+      }
+    });
+
+    $("taskForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = $("taskInput").value.trim();
+      if (!text) return;
+      tasks.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), text, done: false, created: Date.now() });
+      $("taskInput").value = "";
+      persist();
+      $("taskInput").focus();
+    });
+
+    $("taskList").addEventListener("change", (event) => {
+      const id = event.target.dataset.toggle;
+      if (!id) return;
+      tasks = tasks.map(task => task.id === id ? { ...task, done: event.target.checked } : task);
+      persist();
+    });
+
+    $("taskList").addEventListener("click", (event) => {
+      const id = event.target.dataset.deleteTask;
+      if (!id) return;
+      tasks = tasks.filter(task => task.id !== id);
+      persist();
+    });
+
+    function downloadJson(filename, data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    $("exportNotes").addEventListener("click", () => downloadJson("neet-2027-notes.json", notes));
+    $("exportTasks").addEventListener("click", () => downloadJson("neet-2027-progress.json", tasks));
+
+    renderNotes();
+    renderTasks();
+    renderStats();
+  </script>
+</body>
+</html>
